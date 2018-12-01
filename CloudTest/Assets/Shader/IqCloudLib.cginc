@@ -90,6 +90,30 @@ vec4 integrate(in vec4 sum, in float dif, in float den, in vec3 bgcol, in float 
 	return sum + col*(1.0 - sum.a);
 }
 
+
+void doRaymarch(int steps, vec3 ro, vec3 rd, vec3 bgcol, out vec4 sum)
+{
+	float t = 0.0;
+
+	for (int i = 0; i<steps; i++)
+	{
+		vec3  pos = ro + t*rd;
+		if (pos.y<-3.0 || pos.y>2.0 || sum.a > 0.99)
+			break;
+
+		float den = map5(pos);
+		if (den>0.01)
+		{
+			float dif = clamp((den - map5(pos + 0.3*sundir)) / 0.6, 0.0, 1.0);
+			sum = integrate(sum, dif, den, bgcol, t);
+		}
+
+		t += max(0.05, 0.02*t);
+	}
+}
+
+
+
 #define MARCH(STEPS,MAPLOD) for(int i=0; i<STEPS; i++) { vec3  pos = ro + t*rd; if( pos.y<-3.0 || pos.y>2.0 || sum.a > 0.99 ) break; float den = MAPLOD( pos ); if( den>0.01 ) { float dif =  clamp((den - MAPLOD(pos+0.3*sundir))/0.6, 0.0, 1.0 ); sum = integrate( sum, dif, den, bgcol, t ); } t += max(0.05,0.02*t); }
 
 vec4 raymarch(in vec3 ro, in vec3 rd, in vec3 bgcol, in ivec2 px)
@@ -97,11 +121,12 @@ vec4 raymarch(in vec3 ro, in vec3 rd, in vec3 bgcol, in ivec2 px)
 	vec4 sum = 0.0;
 
 	float t = 0.0;//0.05*texelFetch( iChannel0, px&255, 0 ).x;
+	int step = 30;
 
-	MARCH(30, map5);
-	MARCH(30, map4);
-	MARCH(30, map3);
-	MARCH(30, map2);
+	MARCH(step, map5);
+	MARCH(step, map4);
+	MARCH(step, map3);
+	MARCH(step, map2);
 
 	return clamp(sum, 0.0, 1.0);
 }
@@ -117,6 +142,8 @@ mat3 setCamera(in vec3 ro, in vec3 ta, float cr)
 
 vec4 render(in vec3 ro, in vec3 rd, in ivec2 px)
 {
+	sundir = _WorldSpaceLightPos0.xyz;
+
 	// background sky     
 	float sun = clamp(dot(sundir, rd), 0.0, 1.0);
 	vec3 col = vec3(0.6, 0.71, 0.75) - rd.y*0.2*vec3(1.0, 0.5, 1.0) + 0.15*0.5;
