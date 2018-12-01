@@ -143,7 +143,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 	vec3 ta = vec3(0.0, -1.0, 0.0);
 	mat3 ca = setCamera(ro, ta, 0.0);
 	// ray
-	vec3 rd = ca * normalize(vec3(p.xy, 1.5));
+	vec3 rd = mul(ca, normalize(vec3(p.xy, 1.5)));
 
 	fragColor = render(ro, rd, ivec2(fragCoord - 0.5));
 }

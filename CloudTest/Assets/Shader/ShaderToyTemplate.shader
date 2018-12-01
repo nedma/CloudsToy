@@ -1,7 +1,8 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 Shader "Shadertoy/Template" { 
-    Properties{
+    Properties
+	{
         iMouse ("Mouse Pos", Vector) = (100, 100, 0, 0)
         iChannel0("iChannel0", 2D) = "white" {}  
         iChannelResolution0 ("iChannelResolution0", Vector) = (100, 100, 0, 0)
@@ -14,33 +15,39 @@ Shader "Shadertoy/Template" {
 
    
 
-    struct v2f {    
+    struct v2f 
+	{    
         float4 pos : SV_POSITION;
         float4 scrPos : TEXCOORD0;
     };              
 
-    v2f vert(appdata_base v) {  
+    v2f vert(appdata_base v) 
+	{  
         v2f o;
         o.pos = UnityObjectToClipPos (v.vertex);
         o.scrPos = ComputeScreenPos(o.pos);
         return o;
     }  
 
-    vec4 main(vec2 fragCoord);
+	vec4 main(vec2 fragCoord)
+	{
+		return vec4(1, 1, 1, 1);
+	}
 
-    fixed4 frag(v2f _iParam) : COLOR0 { 
+    fixed4 frag(v2f _iParam) : COLOR0 
+	{ 
         vec2 fragCoord = gl_FragCoord;
         return main(gl_FragCoord);
     }  
 
-    vec4 main(vec2 fragCoord) {
-        return vec4(1, 1, 1, 1);
-    }
+   
 
     ENDCG    
 
-    SubShader {    
-        Pass {    
+    SubShader 
+	{    
+        Pass 
+		{    
             CGPROGRAM    
 
             #pragma vertex vert    
