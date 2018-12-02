@@ -81,9 +81,10 @@ vec4 integrate(in vec4 sum, in float dif, in float den, in vec3 bgcol, in float 
 {
 	// lighting
 	vec3 lin = vec3(0.65, 0.7, 0.75)*1.4 + vec3(1.0, 0.6, 0.3)*dif;
-	vec4 col = vec4(mix(vec3(1.0, 0.95, 0.8), vec3(0.25, 0.3, 0.35), den), den);
+	vec4 col = vec4(mix(vec3(1.0, 0.95, 0.8), vec3(0.25, 0.3, 0.35), den), den); // [nedma]den is the value of color alpha
 	col.xyz *= lin;
 	col.xyz = mix(col.xyz, bgcol, 1.0 - exp(-0.003*t*t));
+
 	// front to back blending    
 	col.a *= 0.4;
 	col.rgb *= col.a;
@@ -108,7 +109,7 @@ void doRaymarch(int steps, vec3 ro, vec3 rd, vec3 bgcol, out vec4 sum)
 			sum = integrate(sum, dif, den, bgcol, t);
 		}
 
-		t += max(0.05, 0.02*t);
+		t += max(0.05, 0.02*t); // [nedma]The distance per step becomes bigger and bigger
 	}
 }
 
