@@ -162,7 +162,7 @@ float4 render(in float3 ro, in float3 rd, in half2 px)
 
 
 
-
+// http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 float RaySphereIntersect(float3 r0, float3 rd, float3 s0, float sr, out float3 intersectPos)
 {
 	// - r0: ray origin
