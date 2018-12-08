@@ -92,10 +92,8 @@ vec4 integrate(in vec4 sum, in float dif, in float den, in vec3 bgcol, in float 
 }
 
 
-void doRaymarch(int steps, vec3 ro, vec3 rd, vec3 bgcol, out vec4 sum)
+void doRaymarch(int steps, vec3 ro, vec3 rd, vec3 bgcol, inout vec4 sum, inout float t)
 {
-	float t = 0.0;
-
 	for (int i = 0; i<steps; i++)
 	{
 		vec3  pos = ro + t*rd;
